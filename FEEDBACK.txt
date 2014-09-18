@@ -1,0 +1,43 @@
+* If you extend an existing, explained application, make the new code
+  as close as possible to the old one. When you make changes, make
+  sure you have good pedagogical arguments in the report.
+  For a student, the extension in your code should just be the *necessary*
+  extensions required to use the bootstrap design, or the *natural* extensions
+  that follows from more functionality in the new tool (like a navbar).
+* There was a clear idea of splitting the view.html file into a generic
+  part and a problem-dependent part. If you deviate from this, provide
+  arguments, e.g., that you cannot have a generic form part
+  (seems that it is generic to me). Also, the result part should have
+  exactly the same design unless you are forced to deviate (now the plots
+  are below each other).
+* The compute function now returns tuple of 2- or 3-tuples. I found that
+  less readable than four parameters, so provide good arguments why this
+  is an enhancement. The code is still problem-dependent. An extension
+  towards a more generic return data structure would be a list of
+  dicts, where each dict could be the name of a parameter, its value,
+  its graph, etc. Then the receiving code (the results part of the template)
+  could set up its own table and be more generic. But then you need to
+  utilize that idea.
+* Why use view.py when the original code has the name controller.py and
+  that is the convention in the documentation? Students easily get confused
+  by that...
+* The navbar is fine, but unmotivated as it stands now because of the
+  unmotivated testFunc thing. A better solution is to say you can import
+  several compute functions and list them all in the navbar.
+
+from compute import compute_vib, compute_gamma
+compute = [('Vibration_problem', compute_vib), ('Gamma_density', compute_gamma)]
+
+@app.route('/' + compute[0][0], methods=['GET', 'POST'])
+@app.route('/' + compute[1][0], methods=['GET', 'POST'])
+# Would be ideal of the lines above could be automated...
+def index():
+  # Make completely generic navbar for any given compute list
+
+* Explain the getForm construction in detail. It's new!
+* Why do you run eval on text? Again, you may extend functionality
+  here, but motivate and explain. I tried to test and understand,
+  but didn't get what you mean in the if arg_names part.
+
+Maybe make one version close to vib3 and another app where you use
+extended ideas, but make motivated differences.
