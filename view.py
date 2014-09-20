@@ -1,56 +1,19 @@
 from model import getForm
 from flask import Flask, render_template, request
 from compute import compute_gamma as vib3compute
-from vib1 import compute as vib1compute
-from numpy import sin
 import sys, os, inspect
 
 app = Flask(__name__)
 
-def testFunc(x = 1.):
-    return ((x * 2, "y"),)
 
-def sinFunc(x=0.):
-    return ((sin(x), "y"),)
-
-def surfaceFunc(x=0., y=0.):
-    return ((sin(x) + sin(y)*sin(x+y), "z"),)
-
-func_paths = (
-        # Uses customized view to display results
-        ('vib3_ext', vib3compute, "view_alt.html"),
-        # Uses the default result-view
-        ('vib1', vib1compute, False),
-        ('test', testFunc, False),
-        ('sin', sinFunc, False),
-        ('surface', surfaceFunc, False),
-)
-
-@app.route('/', methods=['GET', 'POST'])
-def index_default():
-    return index("")
-
-@app.route('/<funcName>', methods=['GET', 'POST'])
-def index(funcName):
-
-    # Find the right function
-    func = None
-    result_alt = False
-    for path in func_paths:
-        if path[0] == funcName:
-            func = path[1]
-            view_alt = path[2]
-
-    # If not found, default to first function    
-    if not func:
-        func = func_paths[0][1]
-        view_alt = func_paths[0][2]
-
+@app.route('/vib3_ext', methods=['GET', 'POST'])
+def index():
     # Retrieve the appropriate form-class for the function
-    formClass, arg_names, defaults = getForm(func)
+    formClass, arg_names, defaults = getForm(vib3compute)
     form = formClass(request.form)
 
     result = None
+    result_render = None
 
     if request.method == 'POST':
         # Run eval on the text
@@ -67,13 +30,10 @@ def index(funcName):
                         kwargs[name] = eval(kwargs[name])
 
         if form.validate():
-            result = func(**kwargs)
+            result = vib3compute(**kwargs)
 
-    # If a different result-render is specified, render this first
-    # and insert it into the main template, else use the default-render
-    # to display the results
-    if view_alt:
-        result_alt=render_template(view_alt, result=result)
-        result = None
+    # If there are results, render those, then insert them into the template.
+    if result:
+        result_render=render_template('view_alt.html', result=result)
     return render_template('view.html',
-        form=form, result=result, result_alt=result_alt, funcs=[path[0] for path in func_paths])
+        form=form, result=result_render)
