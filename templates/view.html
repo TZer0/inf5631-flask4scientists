@@ -58,5 +58,8 @@
     </tr>
     {% endfor %}
     {% endif %}
+    {% if result_alt %}
+    {{ result_alt|safe }}
+    {% endif %}
 </table>
 </html>
