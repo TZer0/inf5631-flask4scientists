@@ -5,6 +5,8 @@
   extensions required to use the bootstrap design, or the *natural* extensions
   that follows from more functionality in the new tool (like a navbar).
 
+- See branch simplified
+
 * There was a clear idea of splitting the view.html file into a generic
   part and a problem-dependent part. If you deviate from this, provide
   arguments, e.g., that you cannot have a generic form part
@@ -22,6 +24,8 @@
   its graph, etc. Then the receiving code (the results part of the template)
   could set up its own table and be more generic. But then you need to
   utilize that idea.
+
+- Branch simplified
 
 * Why use view.py when the original code has the name controller.py and
   that is the convention in the documentation? Students easily get confused
@@ -61,4 +65,6 @@ def index():
 Maybe make one version close to vib3 and another app where you use
 extended ideas, but make motivated differences.
 
-- Adding branch.
+- Branch added: simplified. Contains an improved version of the original code.
+  The original result-template is altered to contain bootstrap elements and
+  view.html isn't written to for each render.
