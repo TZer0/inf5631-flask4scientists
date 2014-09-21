@@ -20,6 +20,7 @@ func_paths = (
         # Uses customized view to display results
         ('vib3_ext', vib3compute, "view_alt.html"),
         # Uses the default result-view
+        ('vib3_ext_default', vib3compute, False),
         ('vib1', vib1compute, False),
         ('test', testFunc, False),
         ('sin', sinFunc, False),
