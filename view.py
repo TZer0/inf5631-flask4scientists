@@ -28,11 +28,8 @@ func_paths = (
 )
 
 @app.route('/', methods=['GET', 'POST'])
-def index_default():
-    return index("")
-
 @app.route('/<funcName>', methods=['GET', 'POST'])
-def index(funcName):
+def index(funcName=""):
 
     # Find the right function
     func = None
