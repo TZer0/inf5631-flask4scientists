@@ -26,13 +26,13 @@
             </div>
             {% if field.errors %}
             <table class="table table-hover">
+                {% for error in field.errors %}
                 <tr>
-                    {% for error in field.errors %}
                     <td class="danger">
                         {{ error }}
                     </td>
-                    {% endfor %}
                 </tr>
+                {% endfor %}
 
             </table>
             {% endif %}
