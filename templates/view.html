@@ -27,11 +27,11 @@
             {% if field.errors %}
             <table class="table table-hover">
                 <tr>
+                    {% for error in field.errors %}
                     <td class="danger">
-                        {% for error in field.errors %}
                         {{ error }}
-                        {% endfor %}
                     </td>
+                    {% endfor %}
                 </tr>
 
             </table>
