@@ -6,6 +6,9 @@ from numpy import sin
 import sys, os, inspect
 
 app = Flask(__name__)
+@app.template_filter('isListOrTuple')
+def isListOrTuple(value):
+    return isinstance(value, tuple) or isinstance(value, list)
 
 def testFunc(x = 1.):
     return ((x * 2, "y"),)
@@ -16,6 +19,9 @@ def sinFunc(x=0.):
 def surfaceFunc(x=0., y=0.):
     return ((sin(x) + sin(y)*sin(x+y), "z"),)
 
+def namelessRet(x=0.):
+    return (x+1,)
+
 func_paths = (
         # Uses customized view to display results
         ('vib3_ext', vib3compute, "view_alt.html"),
@@ -25,6 +31,7 @@ func_paths = (
         ('test', testFunc, False),
         ('sin', sinFunc, False),
         ('surface', surfaceFunc, False),
+        ('namelessRet', namelessRet, False),
 )
 
 @app.route('/', methods=['GET', 'POST'])
