@@ -70,7 +70,7 @@ def index(funcName=""):
     # If a different result-render is specified, render this first
     # and insert it into the main template, else use the default-render
     # to display the results
-    if view_alt:
+    if view_alt and result:
         result_alt=render_template(view_alt, result=result)
         result = None
     return render_template('view.html',
