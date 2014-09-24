@@ -1,49 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<style>
+    .appsize { width: 500px }
+</style>
+{% endblock %}
 
-    <link href="http://netdna.bootstrapcdn.com/bootswatch/3.1.1/readable/bootstrap.min.css" rel="stylesheet">
+{% block navbar %}
+<nav class="navbar navbar-default" role="navigation">
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+        {% for f in funcs %}
+        <li><a href="/{{f}}">{{f}}</a></li>
+        {% endfor %}
+    </ul>
+</div><!-- /.container-fluid -->
+</nav>
+{% endblock %}
 
-    <nav class="navbar navbar-default" role="navigation">
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-            {% for f in funcs %}
-            <li><a href="/{{f}}">{{f}}</a></li>
+{% block content %}
+<h3>Input</h3>
+
+<form class="navbar-form navbar-top" method="post" action="" width="200">
+    <div class="form-group">
+        {% for field in form %}
+        <div class="input-group appsize">
+
+            <span class="input-group-addon">{{ field.name }}</span>
+            {{field(class_="form-control")}}
+            <span class="input-group-addon">{{ field.label.text }}</span>
+        </div>
+        {% if field.errors %}
+        <table class="table table-hover">
+            {% for error in field.errors %}
+            <tr>
+                <td class="danger" width="200">
+                    {{ error }}
+                </td>
+            </tr>
             {% endfor %}
-        </ul>
-    </div><!-- /.container-fluid -->
-    </nav>
 
-    <h3>Input</h3>
+        </table>
+        {% endif %}
+        <br />
+        {% endfor %}
+        <input type="submit" value="Compute"  class="btn btn-default"></form>
+</div>
 
-    <form class="navbar-form navbar-top" method="post" action="">
-        <div class="form-group">
-            {% for field in form %}
-            <div class="input-group">
 
-                <span class="input-group-addon">{{ field.name }}</span>
-                {{field(class_="form-control")}}
-                <span class="input-group-addon">{{ field.label.text }}</span>
-            </div>
-            {% if field.errors %}
-            <table class="table table-hover">
-                {% for error in field.errors %}
-                <tr>
-                    <td class="danger">
-                        {{ error }}
-                    </td>
-                </tr>
-                {% endfor %}
+{% if result_alt %}
+<h3>Results</h3>
+{{ result_alt|safe }}
+{% endif %}
+{% if result %}
+<h3>Results</h3>
 
-            </table>
-            {% endif %}
-            {% endfor %}
-            <input type="submit" value="Compute"  class="btn btn-default"></form>
-    </div>
 
-    {% if result != None %}
-
-    <h3>Results</h3>
-    <table class="table table-hover">
+<table class="table table-hover appsize">
     {% for i in range(result|length) %}
     {% set r = result[i] %}
 
@@ -51,26 +64,24 @@
     <tr>
         <td width="100">{{r[1]}}</td>
         <td>
-        {% if r[2] %}
-        </br><img src="{{r[0]}}" width="400">
-        {% else %}
-        {{ r[0] }}
-        {% endif %}
+            {% if r[2] %}
+            </br><img src="{{r[0]}}" width="400">
+            {% else %}
+            {{ r[0] }}
+            {% endif %}
         </td>
     </tr>
     {% else %}
     <tr>
         <td width="100">Value {{i + 1}}</td>
         <td>
-        {{ r }}
+            {{ r }}
         </td>
     </tr>
     {% endif %}
 
     {% endfor %}
-    {% endif %}
-    {% if result_alt %}
-    {{ result_alt|safe }}
-    {% endif %}
 </table>
-</html>
+
+{% endif %}
+{% endblock %}

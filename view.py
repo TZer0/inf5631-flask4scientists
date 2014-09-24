@@ -1,11 +1,13 @@
 from model import getForm
 from flask import Flask, render_template, request
+from flask_bootstrap import Bootstrap
 from compute import compute_gamma as vib3compute
 from vib1 import compute as vib1compute
 from numpy import sin
 import sys, os, inspect
 
 app = Flask(__name__)
+Bootstrap(app)
 @app.template_filter('isListOrTuple')
 def isListOrTuple(value):
     return isinstance(value, tuple) or isinstance(value, list)
@@ -62,16 +64,22 @@ def index(funcName=""):
         # Note that form.name.label is <label for="A">(list)</label>
         kwargs = {name: getattr(form, name).data
                   for name in arg_names if hasattr(form, name)}
-        
+
+        valid = form.validate()
         for name in kwargs:
             if hasattr(form, name) and \
                    hasattr(getattr(form, name), 'label'):
                 label = str(getattr(form, name).label)
                 for tp in ('list', 'tuple', 'nd.array'):
                     if tp in label:
-                        kwargs[name] = eval(kwargs[name])
+                        try:
+                            kwargs[name] = eval(kwargs[name])
+                        except StandardError:
+                            (getattr(form, name)).errors = ("Could not parse " + tp + " value.",)
+                            valid = False
+                            break
 
-        if form.validate():
+        if valid:
             result = func(**kwargs)
 
     # If a different result-render is specified, render this first
